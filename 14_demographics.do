@@ -21,7 +21,7 @@
 	}
 
 *hm_headrel	Relationship with HH head
-	if inlist(name,"India1992","Malawi1992","Niger1992"){
+	if inlist(name,"India1992","Malawi1992","Niger1992","Senegal1992", "Senegal1997"){
 		replace hv101=98 if hvidx!=hv218 & hv101==1
 	} // for points that have hh with multiple hh head, judge hh head by hv218 and recode members hv101=98 if they are not hh head
 	

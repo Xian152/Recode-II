@@ -87,18 +87,5 @@
 		order hhid hv000 hv001 hm_shstruct hv002 hvidx
 		isid  hv001 hm_shstruct hv002 hvidx
 	}
-/*
-	if inlist(name,"Brazil1991"){
-		drop hv001
-		gen hv001 = substr(hhid,5,6)
-		order hhid hvidx hv000 hv001 hv002
-		isid hv001 hv002 hvidx
-	}	
-	if inlist(name,"Cameroon1991"){
-		drop hv002
-		gen hv002 = substr(hhid,8,5)
-		order hhid hvidx hv000 hv001 hv002
-		isid hv001 hv002 hvidx
-	}	
-*/
+
 cap gen hm_shstruct =999

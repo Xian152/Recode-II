@@ -22,13 +22,10 @@ order *,sequential
 	replace c_anc_any = 0 if m14 == 0                                              //m14 = 98 is missing 
 	
 	*c_anc_ear: First antenatal care visit in first trimester of pregnancy of births in last 2 years
-	g c_anc_ear = inrange(m13,0,3) if !inlist(m13,.,98,99)
-	replace c_anc_ear = 0 if m2n == 1 & inlist(m13,.,98,99)
-	/*
 	gen c_anc_ear = 0 if m2n == 0    // m13 based on Women who had seen someone for antenatal care for their last born child
 	replace c_anc_ear = 1 if inrange(m13,0,3)
-	replace c_anc_ear = . if m13 == 98 
-	*/
+	replace c_anc_ear = . if m13 == 98 	
+
 	*c_anc_ear_q: First antenatal care visit in first trimester of pregnancy among ANC users of births in last 2 years
 	gen c_anc_ear_q = c_anc_ear if c_anc_any == 1
 	
@@ -211,23 +208,5 @@ order *,sequential
 		isid v001 hm_shstruct  v002 v003 bidx
 		destring hm_shstruct,replace
 	}
-/*	if inlist(name,"Brazil1991"){
-		drop v001
-		gen v001 = substr(caseid,5,6)
-		order caseid v000 v001 v002 v003
-		isid v001 v002 v003 bidx
-	}		
-	if inlist(name,"Cameroon1991"){
-		drop v002
-		gen v002 = substr(caseid,8,5)
-		order caseid v000 v001 v002 v003
-		isid v001 v002 v003 bidx
-	}		
-	if inlist(name,"Cameroon1991"){
-		drop v002
-		gen v002 = substr(caseid,10,3)
-		order caseid v000 v001 v002 v003
-		isid v001 v002 v003 bidx
-	}		
-*/
+	
 cap gen hm_shstruct =999
