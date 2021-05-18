@@ -38,6 +38,12 @@ order *,sequential
 	|regexm("`lab'","na^|-na|traditional birth attendant|untrained|unquallified|empirical midwife") )
 	replace `var' = . if !inlist(`var',0,1)
 	 }
+	 
+	if inlist(name,"Philippines1993"){
+		replace m2e=.
+		replace m2d=.
+	}
+	
 	/* do consider as skilled if contain words in 
 	   the first group but don't contain any words in the second group */
     egen anc_skill = rowtotal(m2a-m2m),mi	

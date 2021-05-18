@@ -20,6 +20,10 @@ order *,sequential  //make sure variables are in order.
 	|regexm("`lab'","na^|-na|traditional birth attendant|untrained|unquallified|empirical midwife")  
 	replace `var' = . if !inlist(`var',0,1)
 	 }
+	if inlist(name,"Philippines1993"){
+		replace m3e=.
+		replace m3d=.
+	}
 	/* do consider as skilled if contain words in 
 	   the first group but don't contain any words in the second group */
     egen sba_skill = rowtotal(m3a-m3m),mi
