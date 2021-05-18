@@ -65,7 +65,7 @@ order *,sequential  //make sure variables are in order.
 			}		
 		
 *c_diarrhea_mof	Child with diarrhea received more fluids
-        gen c_diarrhea_mof = . //no data point h38 in the Recode III
+		gen c_diarrhea_mof=h16 ==1 if !inlist(h16,.,8) & c_diarrhea == 1
 		if inlist(name,"Egypt1992"){
 			replace c_diarrhea_mof = (s728 == 2) if !inlist(s728,.,8) & c_diarrhea == 1
 		}
@@ -108,7 +108,7 @@ order *,sequential  //make sure variables are in order.
 		
 *c_sevdiarrhea	Child with severe diarrhea
         gen eat = . //no data point h39 in Recode III
-/*         gen eat = (inlist(h39,0,1,2)) if !inlist(h39,.,8) & c_diarrhea == 1 */
+/*		gen eat = (inlist(h39,0,1,2)) if !inlist(h39,.,8) & c_diarrhea == 1 */
         gen c_sevdiarrhea = (c_diarrhea==1 & (c_fever == 1 | c_diarrhea_mof == 1 | eat == 1)) 
 		replace c_sevdiarrhea = . if c_diarrhea == . | c_fever == . | c_diarrhea_mof ==.| eat==. 
 		/* diarrhea in last 2 weeks AND any of the following three conditions: fever OR offered 

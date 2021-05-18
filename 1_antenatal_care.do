@@ -115,6 +115,9 @@ order *,sequential
 	gen c_anc_ur_q = c_anc_ur if c_anc_any == 1 
 	
 	*c_anc_ir: iron supplements taken during pregnancy of births in last 2 years
+	if inlist(name,"Philippines1993"){
+		ren s409a m45
+	}
 	capture confirm variable  m45
 	if _rc==0 {
 		clonevar c_anc_ir = m45
