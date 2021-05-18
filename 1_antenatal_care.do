@@ -34,8 +34,8 @@ order *,sequential
 	local lab: variable label `var' 
     replace `var' = . if ///
         !regexm("`lab'","trained") & ///
-	(!regexm("`lab'","doctor|nurse|midwife|aide soignante|assistante accoucheuse|clinical officer|mch aide|auxiliary birth attendant|physician assistant|professional|ferdsher|skilled|community health care provider|birth attendant|hospital/health center worker|hew|auxiliary|icds|feldsher|mch|vhw|village health team|health personnel|gynecolog(ist|y)|obstetrician|internist|pediatrician|family welfare visitor|medical assistant|health assistant") ///
-	|regexm("`lab'","na^|-na|traditional birth attendant|untrained|unquallified|empirical midwife") )
+	  (!regexm("`lab'","doctor|nurse|Nurse|Assistante Accoucheuse|family welf.visitor|midwife|mifwife|aide soignante|assistante accoucheuse|hosp/hc brth attend|(sanitario)|(ma/sacmo)|rural medical aide|cs health profession|gynaecologist|medex|MCH AIDE|mch worker|nursing aide|clinical officer|(feldsher/other)|(Technical Nurse)|mch aide|auxiliary birth attendant|physician assistant|professional|ferdsher|feldshare|skilled|community health care provider|birth attendant|hospital/health center worker|hew|auxiliary|icds|feldsher|mch|vhw|village health team|health personnel|gynecolog(ist|y)|internist|pediatrician|family welfare visitor|medical assistant|health assistant|ma/sacmo|health officer|ob-gy") ///
+	|regexm("`lab'","na^|-na|na -|NA -|- na|- NA|-NA| na!|trad.birth|vhw|traditional birth attendant|untrained|health assistant|medical assistant/icp|obgyn|anganwadi/icds worker|unquallified|unqualified|empirical midwife|trad.| other|vhw")) &  !(regexm("`lab'","doctor|health prof.")&regexm("`lab'","other")) | regexm("`lab'","untrained")
 	replace `var' = . if !inlist(`var',0,1)
 	 }
 	 

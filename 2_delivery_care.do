@@ -16,10 +16,10 @@ order *,sequential  //make sure variables are in order.
 	foreach var of varlist m3a-m3m {
 	local lab: variable label `var' 
     replace `var' = . if ///
-	!regexm("`lab'","doctor|nurse|midwife|aide soignante|assistante accoucheuse|clinical officer|mch aide|trained|auxiliary birth attendant|physician assistant|professional|ferdsher|skilled|community health care provider|birth attendant|hospital/health center worker|hew|auxiliary|icds|feldsher|mch|vhw|village health team|health personnel|gynecolog(ist|y)|obstetrician|internist|pediatrician|family welfare visitor|medical assistant|health assistant") ///
-	|regexm("`lab'","na^|-na|traditional birth attendant|untrained|unquallified|empirical midwife")  
+	!regexm("`lab'"," trained") & (!regexm("`lab'","doctor|nurse|Assistance|midwife|lady|family welf.visitor|hosp/hc brth attend|matron|family welfare asst.|rural medical aide|mifwife|gynec./obstetr.|village health wrk| gynaecologist|aide soignante|(feldsher/other)|assistante accoucheuse|cs health profess.|clinical officer|mch aide|auxiliary birth attendant|physician assistant|professional|ferdsher|feldshare|skilled|birth attendant|hospital/health center worker|auxiliary|icds|feldsher|mch|village health team|health personnel|gynecolog(ist|y)|obstetrician|internist|pediatrician|medical assistant|matrone|general practitioner|medical assistant|health assistant|ma/sacmo|obgyn") ///
+	|regexm("`lab'","na^|-na|na -|Na- |NA -|- na|husband/partner|mchw|matron |trad.birth attend.|sanitario|trad.birth attend|medical assistant/icp|Hilot|student|homeopath|hakim|herself|traditionnel| other|Other|neighbor|provider|vhw|Friend|Relative|fieldworker|Health Worker|health worker|friend|relative|traditional birth attendant|hew|health assistant|untrained|unqualified|sub-assistant|empirical midwife|box")) & !(regexm("`lab'","doctor|health professional") & regexm("`lab'","other")) & !regexm("`lab'","lady health worker")
 	replace `var' = . if !inlist(`var',0,1)
-	 }
+	}
 	if inlist(name,"Philippines1993"){
 		replace m3e=.
 		replace m3d=.
