@@ -58,19 +58,15 @@ order *,sequential  //make sure variables are in order.
 	replace c_facdel = . if mi(m15) | inlist(m15,98,99) | mi(m15_lab)
 
 	*c_earlybreast: child breastfed within 1 hours of birth of births in last 2 years
-	ren v426 m34 
-	replace m34 = . if midx == 1 & m4 != 94
-	capture confirm variable  m34 m4  
-	if _rc==0 {
-		gen c_earlybreast = 0		
-		replace c_earlybreast = 1 if inlist(m34,0,100)
-		replace c_earlybreast = . if inlist(m34,999,199)
-		replace c_earlybreast = . if m34 ==. //& m4 != 94 // case where m34 is missing that is not due to "no breastfeed"
+	gen c_earlybreast = .
+
+	if inlist(name,"Philippines1993"){
+		replace c_earlybreast = 0		
+		replace c_earlybreast = 1 if inlist(s430,0,100)
+		replace c_earlybreast = . if inlist(s430,999,199)
+		replace c_earlybreast = . if s430 ==. & m4 != 94 // case where m34 is missing that is not due to "no breastfeed"
 	}
-	if _rc!=0 {
-		gen c_earlybreast = .
-	}
-		
+
     *c_skin2skin: child placed on mother's bare skin immediately after birth of births in last 2 years
 	capture confirm variable m77
 	if _rc == 0{
