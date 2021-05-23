@@ -34,11 +34,17 @@ order *,sequential
 	local lab: variable label `var' 
     replace `var' = . if ///
         !regexm("`lab'","trained") & ///
-	  (!regexm("`lab'","doctor|nurse|Nurse|Assistante Accoucheuse|family welf.visitor|midwife|mifwife|aide soignante|assistante accoucheuse|hosp/hc brth attend|(sanitario)|(ma/sacmo)|rural medical aide|cs health profession|gynaecologist|medex|MCH AIDE|mch worker|nursing aide|clinical officer|(feldsher/other)|(Technical Nurse)|mch aide|auxiliary birth attendant|physician assistant|professional|ferdsher|feldshare|skilled|community health care provider|birth attendant|hospital/health center worker|hew|auxiliary|icds|feldsher|mch|vhw|village health team|health personnel|gynecolog(ist|y)|internist|pediatrician|family welfare visitor|medical assistant|health assistant|ma/sacmo|health officer|ob-gy") ///
+	  (!regexm("`lab'","doctor|nurse|Nurse|Assistante Accoucheuse|family welf.visitor|midwife|mifwife|aide soignante|assistante accoucheuse|hosp/hc brth attend|(sanitario)|(ma/sacmo)|rural medical aide|cs health profession|gynaecologist|medex|MCH AIDE|mch worker|nursing aide|clinical officer|(feldsher/other)|(Technical Nurse)|mch aide|auxiliary birth attendant|physician assistant|professional|ferdsher|feldshare|skilled|community health care provider|birth attendant|hospital/health center worker|hew|auxiliary|icds|feldsher|mch|vhw|village health team|health personnel|clin off/med assist|gynecolog(ist|y)|internist|pediatrician|family welfare visitor|medical assistant|health assistant|ma/sacmo|health officer|ob-gy") ///
 	|regexm("`lab'","na^|-na|na -|NA -|- na|- NA|-NA| na!|trad.birth|vhw|traditional birth attendant|untrained|health assistant|medical assistant/icp|obgyn|anganwadi/icds worker|unquallified|unqualified|empirical midwife|trad.| other|vhw")) &  !(regexm("`lab'","doctor|health prof.")&regexm("`lab'","other")) | regexm("`lab'","untrained")
 	replace `var' = . if !inlist(`var',0,1)
 	 }
-	 
+	if inlist(name,"Madagascar1992","Morocco1992"){
+		replace m2c=.
+	}	 
+	if inlist(name,"Nigeria1990"){
+		replace m2c=.
+		replace m2i=.
+	}
 	if inlist(name,"Philippines1993"){
 		replace m2e=.
 		replace m2d=.
@@ -210,7 +216,7 @@ order *,sequential
 		gen v002 = substr(caseid,10,3)
 		order caseid v000 v001 v002 v003
 		isid v001 v002 v003 bidx
-		gen hm_shstruct = 999
+		destring v002,replace
 	}			
 	if inlist(name,"DominicanRepublic1991","Niger1992"){
 		gen hm_shstruct = substr(caseid,8,3)

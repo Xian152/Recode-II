@@ -75,7 +75,6 @@
 		order hhid hv000 hv001 hv002 
 		isid hv001 hv002 hvid  
 		destring hv002,replace 
-		gen hm_shstruct = 999
 	}	 
 	if inlist(name,"DominicanRepublic1991"){
 		ren shvivi hm_shstruct 

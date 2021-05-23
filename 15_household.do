@@ -55,6 +55,6 @@
 *hv001 Sampling cluster number (original)
 *hv002 Household number (original)
 *hv003 Respondent's line number in household roster (original)
-cap gen hm_shstruct
+cap gen hm_shstruct=999
 duplicates drop hv001 hm_shstruct hv002,force
 	

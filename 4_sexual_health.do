@@ -96,7 +96,6 @@
 		order caseid v000 v001 v002 v003
 		isid v001 v002 v003  
 		destring v002,replace 
-		gen hm_shstruct = 999
 	}	 
 	if inlist(name,"DominicanRepublic1991","Niger1992"){
 		gen hm_shstruct = substr(caseid,8,3)
@@ -104,18 +103,5 @@
 		isid v001 hm_shstruct v002 v003  
 		destring hm_shstruct,replace
 	}
-/*	
-	if inlist(name,"Brazil1991"){
-		drop v001
-		gen v001 = substr(caseid,5,6)
-		order caseid v000 v001 v002 v003
-		isid v001 v002 v003 
-	}	
-	if inlist(name,"Cameroon1991"){
-		drop v002
-		gen v002 = substr(caseid,8,5)
-		order caseid v000 v001 v002 v003
-		isid v001 v002 v003 
-	}	
-*/	
+
 cap gen hm_shstruct =999

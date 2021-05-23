@@ -63,7 +63,9 @@ order *,sequential  //make sure variables are in order.
 		if inlist(name,"Egypt1992"){
 			replace c_diarrhea_mof = (s728 == 2) if !inlist(s728,.,8) & c_diarrhea == 1
 		}
-
+		if inlist(name,"Senegal1997"){
+			replace c_diarrhea_mof = (s488a == 3) if !inlist(s488a,.,4) & c_diarrhea == 1
+		}
 *c_diarrhea_medfor Get formal medicine except (ors hmf home other_med, country specific). 
         egen medfor = rowtotal(h12z h15 h15a h15b h15c h15e h15g h15h ),mi
 		gen c_diarrhea_medfor = ( medfor > = 1 ) if c_diarrhea == 1 & medfor!=.
