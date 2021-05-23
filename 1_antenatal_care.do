@@ -43,7 +43,9 @@ order *,sequential
 		replace m2e=.
 		replace m2d=.
 	}
-	
+	if inlist(name,"Zambia1992"){
+		replace m2d=. //clinical officer
+	}	
 	/* do consider as skilled if contain words in 
 	   the first group but don't contain any words in the second group */
     egen anc_skill = rowtotal(m2a-m2m),mi	

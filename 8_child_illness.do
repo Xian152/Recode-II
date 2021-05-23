@@ -31,12 +31,13 @@ order *,sequential  //make sure variables are in order.
 		
 *c_diarrhea_pro	The treatment was provided by a formal provider (all public provider except other public, pharmacy, and private sector)
        /*please cross check as there might be case where the diarreha treatment provider is not in h12a-h12x*/
-	    order h12a-h12x,sequential
+	    if !inlist(name,"Malawi1992") {	    
+		order h12a-h12x,sequential
 	    foreach var of varlist h12a-h12x {
 	    local lab: variable label `var' 	   
         replace `var' = . if ///
-	    regexm("`lab'","( other|shop|pharmacy|market|kiosk|relative|friend|church|drug|addo|rescuer|trad|unqualified|stand|cabinet|ayush|^na)") ///
-	    & !regexm("`lab'","(ngo|hospital|medical center|worker)")  
+	    regexm("`lab'","( other|shop|Shop|store|Store|chemist/ PMS|private dispensary|dispensary|chemist/ pms|hsa|oth.priv sect|itinerant vendor|private person|cs med.priv sector|oth.priv sect (ngo)|mobile seller|Dumba Nengue|Market|pharmacy|market|Pharmacy|at home|kiosk|hakim|DAI-TBA|Traditional Practitioner|dispenser/compounder|Street|other public -|other private -|other -|Diarrhea: CS public sector|Diarrhea: CS private medical|Traditional practitioner|Relatives|diarrhea: cs private medical|volunteer|merchant|relative|Other|friend|church|Church|drug|addo|rescuer|trad|unqualified|stand|cabinet|ayush|^na|-na|na-|NA-|NA -|na -|na -|- na| na|oth.priv secna|med.priv secna|diarrhea: cs public sector)") ///
+	    & !regexm("`lab'","(ngo|hospital|medical center|worker|women|bhu/fwc|maternity house|mchfp center|(sisca post)|pvt clinic|pvt nurse/midwife|cabinet|rescuer|national|(fap/dac/ph)|gov. family planning center/cabi|private policlinic/ woman's co|private family planning center|policlinic/ woman's consultation|cnss|NGO med.|health stand|moving|cs other public facility)") 
 	    replace `var' = . if !inlist(`var',0,1) 
 	    }
 	   /* do not consider formal if contain words in 
@@ -47,22 +48,15 @@ order *,sequential  //make sure variables are in order.
         gen c_diarrhea_pro = 0 if c_diarrhea == 1
         replace c_diarrhea_pro = 1 if c_diarrhea_pro == 0 & pro_dia >= 1 
         replace c_diarrhea_pro = . if pro_dia == . 	
-	   
+}	   
 	   /*for countries below there are categories that identified as formal 
-	   provider but not shown in the label*/
-	    if inlist(name,"Senegal2014","Senegal2012","Senegal2015"){
-			foreach x in a b c d e g h j l m n p q {
+	   provider but not shown in the label*/			
+	    if inlist(name,"Malawi1992") {
+ 			foreach x in a b c d d j l o {
             replace c_diarrhea_pro=1 if c_diarrhea==1 & h12`x'==1
             replace c_diarrhea_pro=. if c_diarrhea==1 & h12`x'==9			
 			}
-			}
-			
-	    if inlist(name,"Senegal2010") {
- 			foreach x in a b c d e j l m n {
-            replace c_diarrhea_pro=1 if c_diarrhea==1 & h12`x'==1
-            replace c_diarrhea_pro=. if c_diarrhea==1 & h12`x'==9			
-			}
-			}		
+		}		
 		
 *c_diarrhea_mof	Child with diarrhea received more fluids
 		gen c_diarrhea_mof=h16 ==1 if !inlist(h16,.,8) & c_diarrhea == 1
@@ -75,13 +69,24 @@ order *,sequential  //make sure variables are in order.
 		gen c_diarrhea_medfor = ( medfor > = 1 ) if c_diarrhea == 1 & medfor!=.
 		// formal medicine don't include "home remedy, herbal medicine and other"
 		replace c_diarrhea_medfor = . if inlist(h12z,8,9) |inlist(h15,8,9)|inlist(h15a,8,9)|inlist(h15b,8,9)|inlist(h15c,8,9)|inlist(h15e,8,9)|inlist(h15g,8,9)|inlist(h15h,8,9)
-		if inlist(name,"Bangladesh1996"){
+		if inlist(name,"Bangladesh1996","Morocco1992"){
 			drop medfor c_diarrhea_medfor
 			egen medfor = rowtotal(h12z h15 h15a h15b h15c ),mi  // pedialite, frutiflex, other liquids
 			gen c_diarrhea_medfor = ( medfor > = 1 ) if c_diarrhea == 1 & medfor!=.
 			replace c_diarrhea_medfor = . if inlist(h12z,8,9) |inlist(h15,8,9)|inlist(h15a,8,9)|inlist(h15b,8,9)|inlist(h15c,8,9)			
 		}
-		
+		if inlist(name,"Pakistan1990"){
+			drop medfor c_diarrhea_medfor
+			egen medfor = rowtotal(h12z h15 h15a h15b h15c h15e),mi  // pedialite, frutiflex, other liquids
+			gen c_diarrhea_medfor = ( medfor > = 1 ) if c_diarrhea == 1 & medfor!=.
+			replace c_diarrhea_medfor = . if inlist(h12z,8,9) |inlist(h15,8,9)|inlist(h15a,8,9)|inlist(h15b,8,9)|inlist(h15c,8,9)|inlist(h15e,8,9)			
+		}
+		if inlist(name,"Peru1991","Paraguay1990"){
+			drop medfor c_diarrhea_medfor
+			egen medfor = rowtotal(h12z h15 h15a h15b h15c h15e h15g),mi  // antidiuretics, other rehydration sl
+			gen c_diarrhea_medfor = ( medfor > = 1 ) if c_diarrhea == 1 & medfor!=.
+			replace c_diarrhea_medfor = . if inlist(h12z,8,9) |inlist(h15,8,9)|inlist(h15a,8,9)|inlist(h15b,8,9)|inlist(h15c,8,9)|inlist(h15e,8,9)|inlist(h15g,8,9)			
+		}
 *c_diarrhea_med	Child with diarrhea received any medicine other than ORS or hmf (country specific)
         egen med = rowtotal(h12z h15 h15a h15b h15c h15d h15e h15f h15g h15h),mi
         gen c_diarrhea_med = ( med > = 1 ) if c_diarrhea == 1 & med!=.
@@ -92,8 +97,25 @@ order *,sequential  //make sure variables are in order.
 			egen med = rowtotal(h12z h15 h15a h15b h15c),mi 
 			gen c_diarrhea_med = ( med > = 1 ) if c_diarrhea == 1 & med!=.
 			replace c_diarrhea_medfor = . if inlist(h12z,8,9) |inlist(h15,8,9)|inlist(h15a,8,9)|inlist(h15b,8,9)|inlist(h15c,8,9)
-		}			
-		
+		}	
+		if inlist(name,"Morocco1992"){
+			drop med c_diarrhea_med
+			egen med = rowtotal(h12z h15 h15a h15b h15c h15d),mi 
+			gen c_diarrhea_med = ( med > = 1 ) if c_diarrhea == 1 & med!=.
+			replace c_diarrhea_medfor = . if inlist(h12z,8,9) |inlist(h15,8,9)|inlist(h15a,8,9)|inlist(h15b,8,9)|inlist(h15c,8,9)|inlist(h15d,8,9)
+		}	
+		if inlist(name,"Pakistan1990"){
+			drop med c_diarrhea_med
+			egen med = rowtotal(h12z h15 h15a h15b h15c h15d h15e),mi 
+			gen c_diarrhea_med = ( med > = 1 ) if c_diarrhea == 1 & med!=.
+			replace c_diarrhea_medfor = . if inlist(h12z,8,9) |inlist(h15,8,9)|inlist(h15a,8,9)|inlist(h15b,8,9)|inlist(h15c,8,9)|inlist(h15d,8,9)|inlist(h15e,8,9)
+		}
+		if inlist(name,"Peru1991","Paraguay1990"){
+			drop med c_diarrhea_med
+			egen med = rowtotal(h12z h15 h15a h15b h15c h15d h15e h15g),mi // antidiuretics, other rehydration sl
+			gen c_diarrhea_med = ( med > = 1 ) if c_diarrhea == 1 & med!=.
+			replace c_diarrhea_medfor = . if inlist(h12z,8,9) |inlist(h15,8,9)|inlist(h15a,8,9)|inlist(h15b,8,9)|inlist(h15c,8,9)|inlist(h15e,8,9)|inlist(h15g,8,9)	
+		}
 *c_diarrheaact	Child with diarrhea seen by provider OR given any form of formal treatment
         gen c_diarrheaact = (c_diarrhea_pro==1 | c_diarrhea_medfor==1 | c_diarrhea_hmf==1 | c_treatdiarrhea==1) if c_diarrhea == 1
 		replace c_diarrheaact = . if (c_diarrhea_pro == . | c_diarrhea_medfor == . | c_diarrhea_hmf == . | c_treatdiarrhea == .) & c_diarrhea == 1		
@@ -151,10 +173,14 @@ order *,sequential  //make sure variables are in order.
 	    foreach var of varlist h32a-h32x {
 	    local lab: variable label `var' 
         replace `var' = . if ///
-	    regexm("`lab'","( other|shop|pharmacy|market|kiosk|relative|friend|church|drug|addo|rescuer|trad|unqualified|stand|cabinet|ayush|^na)") ///
-	    & !regexm("`lab'","(ngo|hospital|medical center|worker)")  
+	    regexm("`lab'","( other| oth |shop|pharmacy|Shop|store|private dispensary|dispensary|chemist/pms|oth.priv sect|mobile sales|itinerant vendor|neighbors/relativ|private person|cs med.priv sect|oth.priv sect (ngo)|hsa|Store|Dumba Nengue|chemist/ PMS|Market|pharmacy|market|Pharmacy|at home|kiosk|hakim|DAI - TBA|Traditional Practitioner|dispenser/compounder|Street|other public -|other private -|other -|Fever/cough: CS public sector|Fever/cough: CS private medical|Traditional practitioner|Relatives|fever/cough: cs private medical|volunteer|merchant|market|kiosk|relative|friend|Other|church|drug|addo|rescuer|trad|unqualified|stand|cabinet|ayush|^na|-na|na-|NA-|na -|NA -|- na| na|oth.priv secna|med.priv secna|fever/cough: cs public sector)") ///
+	    & !regexm("`lab'","(ngo|hospital|medical center|worker|women|bhu/fwc|cabinet|rescuer|national|(sisca post)|policlinic/ woman's consultat|(fap/dac/ph)|private family planning cente|private policlinic/ woman's c|gov. family planning center/c|private policlinic/ woman's co|cnss|NGO med.|health stand|moving|other public facility)")
 		replace `var' = . if !inlist(`var',0,1) 
 	    }
+		if inlist(name,"Yemen1991"){
+			replace h32u=. //daya
+		}		
+		
 	    /* do not consider formal if contain words in 
 	    the first group but don't contain any words in the second group */
         egen pro_ari = rowtotal(h32a-h32x),mi

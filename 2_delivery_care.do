@@ -20,9 +20,21 @@ order *,sequential  //make sure variables are in order.
 	|regexm("`lab'","na^|-na|na -|Na- |NA -|- na|husband/partner|mchw|matron |trad.birth attend.|sanitario|trad.birth attend|medical assistant/icp|Hilot|student|homeopath|hakim|herself|traditionnel| other|Other|neighbor|provider|vhw|Friend|Relative|fieldworker|Health Worker|health worker|friend|relative|traditional birth attendant|hew|health assistant|untrained|unqualified|sub-assistant|empirical midwife|box")) & !(regexm("`lab'","doctor|health professional") & regexm("`lab'","other")) & !regexm("`lab'","lady health worker")
 	replace `var' = . if !inlist(`var',0,1)
 	}
+	if inlist(name,"Madagascar1992","Morocco1992"){
+		replace m3c=.
+	}	 
+	if inlist(name,"Nigeria1990"){
+		replace m3c=.
+	}
+	if inlist(name,"Pakistan1990"){
+		replace m3d=.
+	}
 	if inlist(name,"Philippines1993"){
 		replace m3e=.
 		replace m3d=.
+	}
+	if inlist(name,"Zambia1992"){
+		replace m3d=. //clinical officer
 	}
 	/* do consider as skilled if contain words in 
 	   the first group but don't contain any words in the second group */
