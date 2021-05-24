@@ -52,9 +52,11 @@ order *,sequential  //make sure variables are in order.
 	   /*for countries below there are categories that identified as formal 
 	   provider but not shown in the label*/			
 	    if inlist(name,"Malawi1992") {
+			gen c_diarrhea_pro = 0 if c_diarrhea == 1
+
  			foreach x in a b c d d j l o {
-            replace c_diarrhea_pro=1 if c_diarrhea==1 & h12`x'==1
-            replace c_diarrhea_pro=. if c_diarrhea==1 & h12`x'==9			
+				replace c_diarrhea_pro=1 if c_diarrhea==1 & h12`x'==1
+				replace c_diarrhea_pro=. if c_diarrhea==1 & h12`x'==9			
 			}
 		}		
 		

@@ -15,7 +15,7 @@ replace surveyid = "PK1990DHS" if surveyid == "PK1991DHS"
 replace surveyid = "PE1991DHS" if surveyid == "PE1992DHS"
 replace surveyid = "MG1992DHS" if surveyid == "MD1992DHS"
 replace surveyid = "IN1992DHS" if surveyid == "IA1993DHS"
-replace surveyid = "" if surveyid == ""
+replace surveyid = "SN1992DHS" if surveyid == "SN1993DHS"
 
 save, replace
 */
