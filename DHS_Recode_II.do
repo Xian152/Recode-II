@@ -21,7 +21,7 @@ macro drop _all
 global root "/Users/xianzhang/Dropbox/DHS"
 
 * Define path for data sources
-global SOURCE "/Volumes/alan/DHS/RAW DATA/Recode II"
+global SOURCE "/Users/xianzhang/Desktop/Recode II"
 
 * Define path for output data
 global OUT "${root}/STATA/DATA/SC/FINAL"
@@ -30,7 +30,7 @@ global OUT "${root}/STATA/DATA/SC/FINAL"
 global INTER "${root}/STATA/DATA/SC/INTER"
 
 * Define path for do-files
-global DO "${root}/STATA/DO/SC/DHS/Recode-II"
+global DO "${root}/STATA/DO/SC/DHS/Recode II"
 
 * Define the country names (in globals) in by Recode
 do "${DO}/0_GLOBAL.do"
@@ -39,9 +39,9 @@ global mc "/Users/xianzhang/Dropbox"
 // Brazil1991 BurkinaFaso1993 Cameroon1991 Colombia1990 DominicanRepublic1991 Egypt1992 Ghana1993 India1992 Indonesia1991 Jordan1990 
 // Kenya1993 Madagascar1992 Malawi1992 Morocco1992 Namibia1992 Niger1992 Nigeria1990 Pakistan1990 Paraguay1990 Peru1991 
 // Philippines1993  Rwanda1992  Senegal1992 Senegal1997  Tanzania1991 Turkey1993 Yemen1991  Zambia1992           
-             //$DHScountries_Recode_II
+             
 
-foreach name in BurkinaFaso1993	Cameroon1991	Colombia1990	DominicanRepublic1991	Egypt1992	Ghana1993	India1992	Indonesia1991	Jordan1990	Kenya1993	Madagascar1992	Malawi1992	Morocco1992	Namibia1992	Niger1992	Nigeria1990	Pakistan1990	Paraguay1990	Peru1991	Philippines1993	Rwanda1992	Senegal1992	Senegal1997	Turkey1993	Yemen1991 { //{
+foreach name in   India1992 { //{
 
 tempfile birth ind men hm hiv hh wi zsc iso 
 
@@ -118,37 +118,6 @@ if _rc == 0 {
 ******************************
 *****domains using birth data*
 ******************************
-/*
-gen name = "`name'"
-if inlist(name,"Tanzania1991"){
-use "${SOURCE}/DHS-Tanzania1991/DHS-Tanzania1991ind.dta", clear
-	foreach k in 1 2 3 4 5 6 7 8 9  {
-		foreach var of varlist *_0`k' {
-			local a =  subinstr("`var'","_0`k'","_`k'",1)
-			ren `var' `a'
-		}
-	}
-
-	global namenew
-	foreach var of varlist *_1{
-		local a = subinstr("`var'","_1","_@",.)
-		global namenew $namenew `a'
-	}
-
-	sreshape long $namenew ,  i(caseid) j(bid)
-
-	foreach var of varlist *_{
-		local a = subinstr("`var'","_","",.)
-		ren `var' `a'
-	}
-	
-	drop if b8==. & b5!=0
-	label value m15 m15_1
-	
-save "${SOURCE}/DHS-Tanzania1991birth.dta",replace
-}
-}
-*/
 use "${SOURCE}/DHS-`name'/DHS-`name'birth.dta", clear	
 
     gen hm_age_mon = (v008 - b3)           //hm_age_mon Age in months (children only)
@@ -157,7 +126,7 @@ use "${SOURCE}/DHS-`name'/DHS-`name'birth.dta", clear
     do "${DO}/1_antenatal_care"
     do "${DO}/2_delivery_care"
     do "${DO}/3_postnatal_care"
-    do "${DO}/7_child_vaccinationtest"
+    do "${DO}/7_child_vaccination"
     do "${DO}/8_child_illness"
     do "${DO}/10_child_mortality"
     do "${DO}/11_child_other"
@@ -333,7 +302,6 @@ if inlist(name,"Brazil1991","Cameroon1991","Colombia1990","DominicanRepublic1991
 		drop hv002
 		gen hv002 = substr(hhid,10,3)
 		destring hv002,replace
-		gen hm_shstruct = 999
 		gen name = "`name'"
 	}
 	if inlist(name,"DominicanRepublic1991"){
@@ -365,6 +333,7 @@ if inlist(name,"Brazil1991","Cameroon1991","Colombia1990","DominicanRepublic1991
     rename (v001 v002 v003) (hv001 hv002 hvidx) 
     drop _merge
 }
+
 ************************************
 *****domains using wi data**********
 ************************************
@@ -378,7 +347,7 @@ capture confirm file "${SOURCE}/DHS-`name'/DHS-`name'wi.dta"
 		sort hhid
 		save `wi', replace 
 	restore
-
+	
 	*merge with 
 	merge m:1 hhid using `wi',nogen
 	}
@@ -526,11 +495,8 @@ restore
     if _rc == 0 {
     erase "${INTER}/zsc_hm.dta"
     }	  
+
 	
-capture confirm file "${SOURCE}/DHS-Tanzania1991birth.dta"
-if _rc == 0 {
-erase "${SOURCE}/DHS-Tanzania1991birth.dta"
-}
 save "${OUT}/DHS-`name'.dta", replace   
 }
 
